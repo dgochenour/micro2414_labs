@@ -34,9 +34,16 @@ $ $RTIMEHOME/resource/scripts/rtime-make --config Release --build --name $RTIMEA
 4) Run the as-generated example code, just as a sanity check
 - In one terminal 
 ```
-$ ./objs/x64Linux5gcc9.3.0/example_publisher
+$ ./objs/x64Linux4gcc7.3.0/example_publisher
 ```
 - In a second terminal 
 ```
-$ ./objs/x64Linux5gcc9.3.0/ProximityDatatype_subscriber
+$ ./objs/x64Linux4gcc7.3.0/ProximityDatatype_subscriber
 ```
+
+## Exercise 02
+
+1) Add dummy data in the publisher, just so we aren't writing empty samples
+2) Print some of the received data to stdout on the subscriber side
+3) Generate XML version of the IDL and Increase resource limits to interoperate with Admin Console
+  (https://community.rti.com/static/documentation/connext-micro/2.4.14/doc/html/usersmanual/micro_core.html#admin-console)
