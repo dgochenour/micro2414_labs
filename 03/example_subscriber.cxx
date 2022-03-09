@@ -30,6 +30,10 @@ class PoseReaderListener : public DataReaderListener
         total_samples = 0;
     }
 
+    // LAB #3 -- add a callback for incompatible QoS
+    virtual void on_requested_incompatible_qos(DDSDataReader *reader, 
+            const DDS_RequestedIncompatibleQosStatus &status); 
+
     virtual void on_data_available(DataReader *reader);
 
     virtual void on_subscription_matched(
@@ -46,6 +50,15 @@ class PoseReaderListener : public DataReaderListener
         }
     }
 };
+
+// LAB #3 -- implement the callback 
+void PoseReaderListener::on_requested_incompatible_qos(
+        DDSDataReader *reader, 
+        const DDS::RequestedIncompatibleQosStatus &status) {
+      
+    std::cout << "Incompatible QoS! Count: " << status.total_count << std::endl;
+    std::cout << "Last Offending Policy: " << status.last_policy_id << std::endl;
+}
 
 template <typename T>
 void take_and_print(typename T::DataReader* reader, Long *total_samples)
@@ -173,11 +186,17 @@ subscriber_main_w_args(
     dr_qos.reliability.kind = BEST_EFFORT_RELIABILITY_QOS;
     #endif
 
+    // LAB #3 -- add a deadline to DataReader 
+    dr_qos.deadline.period.sec = 0;
+    dr_qos.deadline.period.nanosec = 500000000; // .5s
+
     datareader = subscriber->create_datareader(
         application->topic,
         dr_qos,
         &listener,
-        DATA_AVAILABLE_STATUS | DDS_SUBSCRIPTION_MATCHED_STATUS);
+        DATA_AVAILABLE_STATUS | 
+        DDS_SUBSCRIPTION_MATCHED_STATUS | 
+        DDS_REQUESTED_INCOMPATIBLE_QOS_STATUS);
 
     if (datareader == NULL)
     {

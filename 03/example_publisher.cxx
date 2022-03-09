@@ -114,6 +114,12 @@ publisher_main_w_args(
     dw_qos.resource_limits.max_instances = 1;
     dw_qos.history.depth = 32;
 
+    // LAB #3 -- Add deadline to the DataWriter Qos
+    // Commenting out the deadline QoS below will cause the listener callback in
+    // the subscriber code to run
+    dw_qos.deadline.period.sec = 0;
+    dw_qos.deadline.period.nanosec = 500000000; // .5s
+
     datawriter = publisher->create_datawriter(
         application->topic,
         dw_qos,
